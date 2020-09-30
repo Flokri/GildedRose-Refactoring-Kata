@@ -85,5 +85,7 @@ namespace csharp
                 }
             }
         }
+
+        public List<Item> GetItems => Items as List<Item>;
     }
 }
