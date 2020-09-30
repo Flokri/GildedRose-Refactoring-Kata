@@ -39,33 +39,25 @@ namespace csharp
 
         private static void HandleNormalItem(Item item)
         {
-            if (item.Quality > 0)
-            {
-                item.Quality -= 1;
-            }
+            if (item.Quality > 0) { item.Quality -= 1; }
 
             item.SellIn -= 1;
 
-            if (item.SellIn < 0)
-            {
-                if (item.Quality > 0)
-                {
-                    item.Quality -= 1;
-                }
-            }
+            if (item.SellIn >= 0) return;
+            if (item.Quality > 0) { item.Quality -= 1; }
         }
 
         private static void HandleBackStagePasses(Item item)
         {
             if (item.Quality < 50)
             {
-                item.Quality = item.Quality + 1;
+                item.Quality += 1;
 
                 if (item.SellIn < 11)
                 {
                     if (item.Quality < 50)
                     {
-                        item.Quality = item.Quality + 1;
+                        item.Quality += 1;
                     }
                 }
 
@@ -73,16 +65,16 @@ namespace csharp
                 {
                     if (item.Quality < 50)
                     {
-                        item.Quality = item.Quality + 1;
+                        item.Quality += 1;
                     }
                 }
             }
 
-            item.SellIn = item.SellIn - 1;
+            item.SellIn -= 1;
 
             if (item.SellIn < 0)
             {
-                item.Quality = item.Quality - item.Quality;
+                item.Quality -= item.Quality;
             }
         }
 
@@ -90,17 +82,15 @@ namespace csharp
         {
             if (item.Quality < 50)
             {
-                item.Quality = item.Quality + 1;
+                item.Quality += 1;
             }
 
-            item.SellIn = item.SellIn - 1;
+            item.SellIn -= 1;
 
-            if (item.SellIn < 0)
+            if (item.SellIn >= 0) return;
+            if (item.Quality < 50)
             {
-                if (item.Quality < 50)
-                {
-                    item.Quality = item.Quality + 1;
-                }
+                item.Quality += 1;
             }
         }
 
