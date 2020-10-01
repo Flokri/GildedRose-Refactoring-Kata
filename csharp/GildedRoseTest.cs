@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.IO;
 
 namespace csharp
 {
@@ -45,10 +46,57 @@ namespace csharp
             Assert.AreEqual(expected, rose.GetItems?[0].Quality);
         }
 
-        //[Test]
-        //public void RefactoredOutputShouldEqualsLegacy()
-        //{
-        //}
+        [Test]
+        public void RefactoredOutputShouldEqualsLegacy()
+        {
+            var directory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var legacyOutput = File.ReadAllText(string.Format("{0}\\{1}", directory, "thirtyDays.txt"));
+
+            IList<Item> Items = new List<Item>{
+                new Item {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
+                new Item {Name = "Aged Brie", SellIn = 2, Quality = 0},
+                new Item {Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7},
+                new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80},
+                new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80},
+                new Item
+                {
+                    Name = "Backstage passes to a TAFKAL80ETC concert",
+                    SellIn = 15,
+                    Quality = 20
+                },
+                new Item
+                {
+                    Name = "Backstage passes to a TAFKAL80ETC concert",
+                    SellIn = 10,
+                    Quality = 49
+                },
+                new Item
+                {
+                    Name = "Backstage passes to a TAFKAL80ETC concert",
+                    SellIn = 5,
+                    Quality = 49
+                },
+                //this conjured item does not work properly yet
+                new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
+            };
+
+            var app = new GildedRose(Items);
+
+            string newOutput = "";
+            for (var i = 0; i < 31; i++)
+            {
+                newOutput += ("-------- day " + i + " --------\n");
+                newOutput += ("name, sellIn, quality\n");
+                for (var j = 0; j < Items.Count; j++)
+                {
+                    newOutput += Items[j] + "\n";
+                }
+                newOutput += ("\n");
+                app.UpdateQuality();
+            }
+
+            Assert.AreEqual(legacyOutput, newOutput);
+        }
 
         private GildedRose gildedRoseOf(string name, int sellin, int quality) => new GildedRose(new List<Item> { new Item() { Name = name, SellIn = sellin, Quality = quality } });
     }
